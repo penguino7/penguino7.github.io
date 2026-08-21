@@ -3,52 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Penguin07 | CTF Writeups & Blog</title>
+    <title>Penguin07 | CTF Writeups</title>
     <style>
+        :root {
+            --bg-main: #0d1117;
+            --bg-sidebar: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-link: #58a6ff;
+            --text-hover: #1f6feb;
+        }
+
         body {
-            background-color: #0d1117;
-            color: #c9d1d9;
+            background-color: var(--bg-main);
+            color: var(--text-main);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
-        .container {
+
+        /* Thanh bên trái - Danh sách bài viết */
+        .sidebar {
+            width: 300px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
             text-align: center;
-            padding: 30px;
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            background-color: #161b22;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
-        h1 {
-            color: #58a6ff;
-            margin-bottom: 10px;
+
+        .sidebar-header h2 {
+            margin: 0;
+            color: var(--text-link);
+            font-size: 1.4rem;
         }
-        p {
-            color: #8b949e;
-            font-size: 1.1rem;
+
+        .post-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
         }
-        .status {
-            display: inline-block;
-            padding: 5px 12px;
-            background-color: #238636;
-            color: white;
-            border-radius: 15px;
-            font-size: 0.9rem;
+
+        .post-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .post-item:hover {
+            background-color: #21262d;
+        }
+
+        .post-item.active {
+            background-color: #1f6feb33;
+            border-left: 4px solid var(--text-link);
+        }
+
+        .post-title {
             font-weight: bold;
-            margin-top: 15px;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .post-category {
+            font-size: 0.8rem;
+            color: #8b949e;
+            text-transform: uppercase;
+        }
+
+        /* Vùng bên phải - Nội dung chi tiết bài viết */
+        .content-area {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .post-content h1 {
+            color: var(--text-link);
+            margin-top: 0;
+        }
+
+        .post-meta {
+            color: #8b949e;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        /* Định dạng code block cho Writeup */
+        pre {
+            background-color: #161b22;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+            color: #ff7b72;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🐧 Penguin07 Blog</h1>
-        <p>Hệ thống GitHub Pages & Custom Domain đã cấu hình thành công!</p>
-        <p>Đang chuẩn bị cập nhật các bài viết Writeup...</p>
-        <div class="status">✓ Setup Success</div>
+
+    <!-- BÊN TRÁI: DANH SÁCH BÀI VIẾT -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>🐧 Penguin07 Blog</h2>
+        </div>
+        <ul class="post-list" id="postList">
+            <!-- Các bài viết sẽ được tự động render ở đây bằng Javascript -->
+        </ul>
     </div>
+
+    <!-- BÊN PHẢI: NỘI DUNG CHI TIẾT -->
+    <div class="content-area" id="contentArea">
+        <!-- Nội dung bài viết sẽ tự động thay đổi tại đây -->
+    </div>
+
+    <script>
+        // DỮ LIỆU CÁC BÀI WRITEUP CỦA BẠN (Bạn có thể thêm bài mới tại đây)
+        const writeups = [
+            {
+                id: "welcome",
+                title: "Giới thiệu Blog",
+                category: "General",
+                date: "2026-08-21",
+                content: `
+                    <h1>Chào mừng bạn đến với Penguin07 Blog!</h1>
+                    <p class="post-meta">Đăng ngày: 2026-08-21 | Danh mục: General</p>
+                    <p>Đây là nơi mình lưu trữ toàn bộ các bài viết Writeup giải các thử thách CTF, kỹ thuật bảo mật và nghiên cứu cá nhân.</p>
+                    <p>← Hãy chọn một bài viết ở danh sách bên trái để xem chi tiết nội dung nhé!</p>
+                `
+            },
+            {
+                id: "ctf-web-01",
+                title: "Sanity Check - Web Exploitation",
+                category: "Web",
+                date: "2026-08-20",
+                content: `
+                    <h1>Writeup: Sanity Check (Web Challenge)</h1>
+                    <p class="post-meta">Đăng ngày: 2026-08-20 | Danh mục: Web</p>
+                    <p><strong>Mô tả bài toán:</strong> Bài thi yêu cầu tìm kiếm Flag ẩn trong phần mã nguồn của trang web.</p>
+                    <h3>Cách giải:</h3>
+                    <p>F12 trình duyệt lên, vào tab Elements và tìm kiếm chuỗi <code>FLAG{...}</code>.</p>
+                    <pre><code>// Mã nguồn tìm thấy trong comment HTML
+&lt;!-- FLAG{congratulations_you_found_me} --&gt;</code></pre>
+                `
+            },
+            {
+                id: "ctf-pwn-01",
+                title: "Buffer Overflow 101 - Pwnable",
+                category: "Pwn",
+                date: "2026-08-19",
+                content: `
+                    <h1>Writeup: Buffer Overflow Basic</h1>
+                    <p class="post-meta">Đăng ngày: 2026-08-19 | Danh mục: Pwn</p>
+                    <p>Phân tích lỗ hổng tràn bộ đệm khi chương trình sử dụng hàm <code>gets()</code> không kiểm soát kích thước dữ liệu nhập vào.</p>
+                    <pre><code># Gợi ý mã khai thác Python (pwntools)
+from pwn import *
+p = remote('://ctf.com', 1337)
+payload = b'A' * 64 + p64(0xdeadbeef)
+p.sendline(payload)
+p.interactive()</code></pre>
+                `
+            }
+        ];
+
+        // Hàm hiển thị danh sách bài viết lên thanh bên trái
+        function renderSidebar() {
+            const listContainer = document.getElementById('postList');
+            listContainer.innerHTML = '';
+
+            writeups.forEach((post, index) => {
+                const li = document.createElement('li');
+                li.className = `post-item ${index === 0 ? 'active' : ''}`;
+                li.innerHTML = `
+                    <div class="post-title">${post.title}</div>
+                    <div class="post-category">${post.category} - ${post.date}</div>
+                `;
+                li.onclick = () => loadPost(post.id, li);
+                listContainer.appendChild(li);
+            });
+        }
+
+        // Hàm tải nội dung bài viết sang vùng bên phải khi bấm nút
+        function loadPost(id, element) {
+            // Đổi trạng thái active ở thanh bên
+            document.querySelectorAll('.post-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+
+            // Tìm bài viết đúng ID và hiển thị nội dung
+            const post = writeups.find(p => p.id === id);
+            if (post) {
+                document.getElementById('contentArea').innerHTML = post.content;
+            }
+        }
+
+        // Khởi chạy khi trang web tải xong
+        renderSidebar();
+        loadPost(writeups[0].id, document.querySelector('.post-item'));
+    </script>
 </body>
 </html>
